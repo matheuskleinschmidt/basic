@@ -1,18 +1,39 @@
-// ⚠️ No types available here
-import { MapContainer } from 'react-leaflet'
-import { TileLayer } from "react-leaflet/TileLayer";
-import { Marker } from "react-leaflet/Marker";
-import { Popup } from "react-leaflet/Popup";
-
-export default function HomePage() {
-  return (
-
-      <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-      </MapContainer>
-
-  );
-}
+import {
+    QueryClient,
+    QueryClientProvider,
+    useQuery,
+  } from '@tanstack/react-query'
+  
+  const queryClient = new QueryClient()
+  
+  export default function App() {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <Example />
+      </QueryClientProvider>
+    )
+  }
+  
+  function Example() {
+    const { isPending, error, data } = useQuery({
+      queryKey: ['repoData'],
+      queryFn: () =>
+        fetch('https://api.github.com/repos/TanStack/query').then((res) =>
+          res.json(),
+        ),
+    })
+  
+    if (isPending) return 'Loading...'
+  
+    if (error) return 'An error has occurred: ' + error.message
+  
+    return (
+      <div>
+        <h1>{data.name}</h1>
+        <p>{data.description}</p>
+        <strong>👀 {data.subscribers_count}</strong>{' '}
+        <strong>✨ {data.stargazers_count}</strong>{' '}
+        <strong>🍴 {data.forks_count}</strong>
+      </div>
+    )
+  }
