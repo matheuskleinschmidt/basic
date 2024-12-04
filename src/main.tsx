@@ -12,6 +12,9 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { NotFoundError, fetchPost, fetchPosts } from './posts'
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import HomePage from "./pages/HomePage"
+// ⚠️ No types available here
+import { MapContainer } from 'react-leaflet'
+import { TileLayer } from "react-leaflet/TileLayer";
 
 const rootRoute = createRootRoute({
   component: RootComponent,
@@ -77,7 +80,12 @@ const indexRoute = createRoute({
 
 function IndexComponent() {
   return (
-    <HomePage></HomePage>
+    <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+    <TileLayer
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
+  </MapContainer>
   )
 }
 
